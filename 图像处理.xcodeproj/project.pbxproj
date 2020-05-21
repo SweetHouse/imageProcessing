@@ -13,10 +13,11 @@
 		7B2AD70B2472870D008DBB5D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B2AD7092472870D008DBB5D /* Main.storyboard */; };
 		7B2AD70D2472870E008DBB5D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B2AD70C2472870E008DBB5D /* Assets.xcassets */; };
 		7B2AD7102472870E008DBB5D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B2AD70E2472870E008DBB5D /* LaunchScreen.storyboard */; };
-		7B2AD718247287F0008DBB5D /* GaosimohuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AD717247287F0008DBB5D /* GaosimohuViewController.swift */; };
-		7B2AD71A247287FD008DBB5D /* MasaikeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AD719247287FD008DBB5D /* MasaikeViewController.swift */; };
+		7B2AD718247287F0008DBB5D /* test1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AD717247287F0008DBB5D /* test1.swift */; };
+		7B2AD71A247287FD008DBB5D /* test2_1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AD719247287FD008DBB5D /* test2_1.swift */; };
 		7B2AD71C24728908008DBB5D /* LWFMasaikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AD71B24728908008DBB5D /* LWFMasaikeView.swift */; };
 		7B2AD71E2473D96B008DBB5D /* Image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B2AD71D2473D96B008DBB5D /* Image@2x.png */; };
+		7B2AD72024767FB9008DBB5D /* test2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AD71F24767FB9008DBB5D /* test2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,10 +29,11 @@
 		7B2AD70C2472870E008DBB5D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7B2AD70F2472870E008DBB5D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7B2AD7112472870E008DBB5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7B2AD717247287F0008DBB5D /* GaosimohuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaosimohuViewController.swift; sourceTree = "<group>"; };
-		7B2AD719247287FD008DBB5D /* MasaikeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasaikeViewController.swift; sourceTree = "<group>"; };
+		7B2AD717247287F0008DBB5D /* test1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test1.swift; sourceTree = "<group>"; };
+		7B2AD719247287FD008DBB5D /* test2_1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test2_1.swift; sourceTree = "<group>"; };
 		7B2AD71B24728908008DBB5D /* LWFMasaikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LWFMasaikeView.swift; sourceTree = "<group>"; };
 		7B2AD71D2473D96B008DBB5D /* Image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Image@2x.png"; sourceTree = "<group>"; };
+		7B2AD71F24767FB9008DBB5D /* test2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,13 +66,14 @@
 		7B2AD7022472870D008DBB5D /* 图像处理 */ = {
 			isa = PBXGroup;
 			children = (
+				7B2AD71B24728908008DBB5D /* LWFMasaikeView.swift */,
 				7B2AD71D2473D96B008DBB5D /* Image@2x.png */,
 				7B2AD7032472870D008DBB5D /* AppDelegate.swift */,
 				7B2AD7052472870D008DBB5D /* SceneDelegate.swift */,
 				7B2AD7072472870D008DBB5D /* ViewController.swift */,
-				7B2AD717247287F0008DBB5D /* GaosimohuViewController.swift */,
-				7B2AD71B24728908008DBB5D /* LWFMasaikeView.swift */,
-				7B2AD719247287FD008DBB5D /* MasaikeViewController.swift */,
+				7B2AD717247287F0008DBB5D /* test1.swift */,
+				7B2AD71F24767FB9008DBB5D /* test2.swift */,
+				7B2AD719247287FD008DBB5D /* test2_1.swift */,
 				7B2AD7092472870D008DBB5D /* Main.storyboard */,
 				7B2AD70C2472870E008DBB5D /* Assets.xcassets */,
 				7B2AD70E2472870E008DBB5D /* LaunchScreen.storyboard */,
@@ -155,8 +158,9 @@
 				7B2AD7042472870D008DBB5D /* AppDelegate.swift in Sources */,
 				7B2AD71C24728908008DBB5D /* LWFMasaikeView.swift in Sources */,
 				7B2AD7062472870D008DBB5D /* SceneDelegate.swift in Sources */,
-				7B2AD718247287F0008DBB5D /* GaosimohuViewController.swift in Sources */,
-				7B2AD71A247287FD008DBB5D /* MasaikeViewController.swift in Sources */,
+				7B2AD718247287F0008DBB5D /* test1.swift in Sources */,
+				7B2AD71A247287FD008DBB5D /* test2_1.swift in Sources */,
+				7B2AD72024767FB9008DBB5D /* test2.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GaosimohuViewController: UIViewController {
+class test1: UIViewController {
     var slider = UISlider()
     var label = UILabel()
     var effectView = UIVisualEffectView()

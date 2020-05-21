@@ -25,8 +25,8 @@ class ViewController: UIViewController {
         for title in titles.enumerated() {
             let btn = UIButton(type: .custom)
             view.addSubview(btn)
-            btn.frame.size = CGSize(width: 100, height: 25)
-            btn.center = CGPoint(x: UIScreen.main.bounds.size.width/2, y: 200 + CGFloat(title.offset) * 25.0)
+            btn.frame.size = CGSize(width: 100, height: 30)
+            btn.center = CGPoint(x: UIScreen.main.bounds.size.width/2, y: 200 + CGFloat(title.offset) * 40)
             btn.setTitle(title.element, for: .normal)
             btn.backgroundColor = .green
             btn.addTarget(self, action: #selector(ClickOn(btn:)), for: .touchUpInside)
@@ -37,9 +37,11 @@ class ViewController: UIViewController {
     @objc func ClickOn(btn:UIButton){
         switch btn.titleLabel?.text {
         case "高斯模糊":
-            self.present(GaosimohuViewController(), animated: true, completion: nil)
+            self.present(test1(), animated: true, completion: nil)
         case "马赛克":
-            self.present(MasaikeViewController(), animated: true, completion: nil)
+            let tab = test2()
+            tab.modalPresentationStyle = .fullScreen
+            self.present(tab, animated: true, completion: nil)
         default:
             return
         }
