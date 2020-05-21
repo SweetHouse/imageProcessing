@@ -70,36 +70,29 @@ class LWFMasaikeView: UIView {
     }
 
     override func draw(_ rect: CGRect) {
-        var image: CIImage? = nil
-        if let PixelImage = pixelImage,let CGImage = PixelImage.cgImage {
-            image = CIImage(cgImage: CGImage)
-        }else{
-            return
-        }
-        // Affine仿射，不知道干嘛的有问题就屏蔽了
-//        let affineClampFilter = CIFilter(name: "CIAffineClamp")
-//        affineClampFilter?.setValue(image, forKey: kCIInputImageKey)
-//        var xform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-//        affineClampFilter?.setValue(NSValue(bytes: &xform, objCType: "CGAffineTransform"), forKey: "inputTransform")
+        var image: CIImage? = CIImage(cgImage: (pixelImage?.cgImage)!)
+        // 去边，不知道为啥无效
+//        let clampFilter = CIFilter(name:"CIAffineClamp")
+//        clampFilter?.setValue(image, forKey:kCIInputImageKey)
 
         // Pixellate打码
         let pixellateFilter = CIFilter(name: "CIPixellate")
         pixellateFilter?.setDefaults()
         pixellateFilter?.setValue(image, forKey: kCIInputImageKey)
         pixellateFilter?.setValue(self.fromScal, forKey: "inputScale")
-        let center = CIVector(cgPoint: CGPoint(x: (image?.extent.size.width ?? 0) / 2.0, y: (image?.extent.size.height ?? 0) / 2.0))
-        pixellateFilter?.setValue(center, forKey: "inputCenter")
+//        let center = CIVector(cgPoint: CGPoint(x: (image?.extent.size.width ?? 0) / 2.0, y: (image?.extent.size.height ?? 0) / 2.0))
+//        pixellateFilter?.setValue(center, forKey: "inputCenter")
 
-//        // Crop裁剪（不裁剪打码图片尺寸会不停伸缩,tm裁剪了又不好衔接）
+        // Crop裁剪（不裁剪打码图片尺寸会不停伸缩,tm裁剪了又不好衔接）
 //        let cropFilter = CIFilter(name: "CICrop")
 //        cropFilter?.setDefaults()
 //        cropFilter?.setValue(pixellateFilter?.outputImage, forKey: kCIInputImageKey)
 //        cropFilter?.setValue(CIVector(x: 0, y: 0, z: pixelImage.size.width, w: pixelImage.size.height), forKey: "inputRectangle")
 
-        image = (pixellateFilter?.value(forKey: kCIOutputImageKey) as? CIImage)
+        image = pixellateFilter?.outputImage
 
         let context = CIContext(options: nil)
-        let imgRef = context.createCGImage(image ?? CIImage(), from: image?.extent ?? CGRect.zero)
+        let imgRef = context.createCGImage(image ?? CIImage(), from: image?.extent ?? CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 3, height: UIScreen.main.bounds.height * 3))
 
         if let imgRef = imgRef {
             imageView.image = UIImage(cgImage: imgRef)
