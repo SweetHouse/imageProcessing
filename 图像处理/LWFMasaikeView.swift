@@ -15,21 +15,18 @@ class LWFMasaikeView: UIView {
         let imgv = UIImageView(frame: self.bounds)
         return imgv
     }()
-    private var pixelImage:UIImage!//码图
+    private var pixelImage:UIImage!//截屏
     private var displayLink:CADisplayLink?//定时器
     private var fromScal:CGFloat = 0
     private var toScal:CGFloat = 0
-    private var addSubtrat:CGFloat = 0//变化值
+    private var addSubtrat:CGFloat = 0//每次刷新变化量
     public var animateCompleted:block?//动画完成
+    var fps:Int = 40//刷新率
 
     public func animate(duration:CGFloat,fromScal:CGFloat,toScal:CGFloat)->Void{
         self.fromScal = fromScal
         self.toScal = toScal
-
-        displayLink = CADisplayLink(target: self, selector: #selector(pix))
-        displayLink?.preferredFramesPerSecond = 30
-        displayLink?.add(to: .main, forMode: .common)
-        self.addSubtrat = (toScal - fromScal)/duration/30
+        self.addSubtrat = (toScal - fromScal)/duration/CGFloat(fps)
     }
     
     @objc private func pix(){
@@ -46,21 +43,18 @@ class LWFMasaikeView: UIView {
             }
         }
     }
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.addSubview(imageView)
-    }
+
     convenience init(frame:CGRect,pixView:UIView){
         self.init(frame:frame)
+        self.addSubview(imageView)
         pixelImage = convertViewToImage(view: pixView)
+        
+        displayLink = CADisplayLink(target: self, selector: #selector(pix))
+        displayLink?.preferredFramesPerSecond = fps
+        displayLink?.add(to: .main, forMode: .common)
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     /// 控件转图片
-    /// - Parameter view: 任意uiview控件
     private func convertViewToImage(view:UIView?)->UIImage?{
         UIGraphicsBeginImageContextWithOptions((view?.bounds.size)!,false, UIScreen.main.scale);
         view?.layer.render(in: UIGraphicsGetCurrentContext()!)
@@ -68,29 +62,30 @@ class LWFMasaikeView: UIView {
         UIGraphicsEndImageContext();
         return image
     }
-
+    ///
     override func draw(_ rect: CGRect) {
         var image: CIImage? = CIImage(cgImage: (pixelImage?.cgImage)!)
-        // 去边，不知道为啥无效
-//        let clampFilter = CIFilter(name:"CIAffineClamp")
-//        clampFilter?.setValue(image, forKey:kCIInputImageKey)
-
-        // Pixellate打码
+        // Affine
+        let affineClampFiletr = CIFilter(name: "CIAffineClamp")
+        affineClampFiletr?.setValue(image, forKey: kCIInputImageKey)
+        let xform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        affineClampFiletr?.setValue(xform, forKey: "inputTransform")
+        // Pixellate
         let pixellateFilter = CIFilter(name: "CIPixellate")
         pixellateFilter?.setDefaults()
-        pixellateFilter?.setValue(image, forKey: kCIInputImageKey)
+        pixellateFilter?.setValue(affineClampFiletr?.outputImage, forKey: kCIInputImageKey)
         pixellateFilter?.setValue(self.fromScal, forKey: "inputScale")
-//        let center = CIVector(cgPoint: CGPoint(x: (image?.extent.size.width ?? 0) / 2.0, y: (image?.extent.size.height ?? 0) / 2.0))
+//        let center = CGPoint(x: image?.extent.size.width ?? 0, y: image?.extent.size.height ?? 0)
 //        pixellateFilter?.setValue(center, forKey: "inputCenter")
-
-        // Crop裁剪（不裁剪打码图片尺寸会不停伸缩,tm裁剪了又不好衔接）
-//        let cropFilter = CIFilter(name: "CICrop")
-//        cropFilter?.setDefaults()
-//        cropFilter?.setValue(pixellateFilter?.outputImage, forKey: kCIInputImageKey)
-//        cropFilter?.setValue(CIVector(x: 0, y: 0, z: pixelImage.size.width, w: pixelImage.size.height), forKey: "inputRectangle")
-
-        image = pixellateFilter?.outputImage
-
+//         Crop
+        let cropFilter = CIFilter(name: "CICrop")
+        cropFilter?.setDefaults()
+        cropFilter?.setValue(pixellateFilter?.outputImage, forKey: kCIInputImageKey)
+        cropFilter?.setValue(CIVector(x: 0, y: 0, z: self.pixelImage.size.width, w: self.pixelImage.size.height), forKey: "inputRectangle")
+        
+        
+        //TODU:加上crop可以全屏打了，但是tm坐标又不好定位了，还是用CRPixellatedView集成吧...始终做不到他那种流畅的效果
+        image = cropFilter?.outputImage
         let context = CIContext(options: nil)
         let imgRef = context.createCGImage(image ?? CIImage(), from: image?.extent ?? CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 3, height: UIScreen.main.bounds.height * 3))
 
@@ -99,84 +94,6 @@ class LWFMasaikeView: UIView {
         }
         super.draw(rect)
     }
-    
-        ///适配图片尺寸
-    //    private func resizeImage(image:UIImage,contentMode:ContentMode,bounds:CGSize,quality:CGInterpolationQuality)->UIImage{
-    //        let horizontalRatio = bounds.width / image.size.width;
-    //        let verticalRatio = bounds.height / image.size.height;
-    //        var ratio:CGFloat = 0
-    //
-    //        switch (contentMode) {
-    //            case .scaleAspectFill:
-    //                ratio = max(horizontalRatio, verticalRatio);
-    //            case .scaleAspectFit:
-    //                ratio = min(horizontalRatio, verticalRatio);
-    //            default:
-    //                ratio = 1
-    //        }
-    //
-    //        let newSize = CGSize(width: image.size.width * ratio, height: image.size.height * ratio);
-    //
-    //        var drawTransposed:Bool = false
-    //
-    //        switch (image.imageOrientation) {
-    //            case .rightMirrored:
-    //                drawTransposed = true;
-    //            default:
-    //                drawTransposed = false;
-    //        }
-    //
-    //        var transform:CGAffineTransform = .identity;
-    //
-    //        switch (image.imageOrientation) {
-    //            case .downMirrored:   // EXIF = 4
-    //                transform = transform.translatedBy(x: newSize.width, y: newSize.height);
-    //                transform = transform.rotated(by: .pi);
-    //            case .leftMirrored:   // EXIF = 5
-    //                transform = transform.translatedBy(x: newSize.width, y: 0);
-    //                transform = transform.rotated(by: .pi/2);
-    //            case .rightMirrored:  // EXIF = 7
-    //                transform = transform.translatedBy(x: 0, y: newSize.height);
-    //                transform = transform.rotated(by: -.pi/2);
-    //            default:
-    //                print("")
-    //
-    //        }
-    //
-    //        switch (image.imageOrientation) {
-    //            case .downMirrored:   // EXIF = 4
-    //                transform = transform.translatedBy(x: newSize.width, y: 0);
-    //                transform = transform.scaledBy(x: -1, y: 1);
-    //            case .rightMirrored:   // EXIF = 5
-    //                transform = transform.translatedBy(x: newSize.height, y: 0);
-    //                transform = transform.scaledBy(x: -1, y: 1);
-    //            default:
-    //                print("")
-    //
-    //        }
-    //
-    //        let newRect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height).integral;
-    //        let transposedRect = CGRect(x: 0, y: 0, width: newRect.size.height, height: newRect.size.width);
-    //        let imageRef:CGImage = image.cgImage!
-    //
-    //        let bitmap:CGContext = CGContext(data: nil,
-    //                                         width: Int(newRect.size.width),
-    //                                         height: Int(newRect.size.height),
-    //                                         bitsPerComponent: imageRef.bitsPerComponent,
-    //                                         bytesPerRow: 0,
-    //                                         space: imageRef.colorSpace!,
-    //                                         bitmapInfo: imageRef.bitmapInfo.rawValue)!
-    //
-    //        bitmap.concatenate(transform);
-    //        bitmap.interpolationQuality = quality;
-    //        bitmap.draw(imageRef, in: drawTransposed ? transposedRect : newRect)
-    //        draw(self.layer, in: bitmap)
-    //
-    //        let newImageRef:CGImage = bitmap.makeImage()!
-    //        let newImage:UIImage = UIImage(cgImage: newImageRef);
-    //
-    //        return newImage;
-    //    }
 }
 
 
